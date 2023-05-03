@@ -35,10 +35,10 @@ df=pd.read_csv('mushrooms 2.csv')
 # print(df)
 
 #count of columns and rows
-# print(df.shape)
-#
-# print(df.info())
-# print(df.describe())
+print(df.shape)
+
+print(df.info())
+print(df.describe())
 
 import plotly.express as px
 
@@ -52,10 +52,10 @@ fig.show()
 fig, axes = plt.subplots(nrows=7,ncols=3, figsize=(20,50),sharey=True)
 idx = 0
 #skip label
-# for col in df.columns[1:]:
-#     sns.countplot(data=df,x=col, hue='class' ,ax=axes[idx//3][idx%3], palette='ch:s=0.25,rot=-0.25')
-#     idx +=1
-# plt.show()
+for col in df.columns[1:]:
+    sns.countplot(data=df,x=col, hue='class' ,ax=axes[idx//3][idx%3], palette='ch:s=0.25,rot=-0.25')
+    idx +=1
+plt.show()
 # There are some types that are most likely safe to eat, which are:
 
 # mushroom with almond odor or no-odor.
@@ -87,21 +87,19 @@ df.drop(columns='veil-type', inplace=True)
 df = df.replace("?", np.nan)
 
 #stalk-root has  "2480" null values
-# print(df.isnull().sum())
+print(df.isnull().sum())
 
 #replace null by most frequent
-#not necessary to write b
-# imputer = SimpleImputer(missing_values=np.NaN,strategy ="most_frequent" ,fill_value='b')
 imputer = SimpleImputer(missing_values=np.NaN,strategy ="most_frequent")
 
 df['stalk-root']=imputer.fit_transform(df['stalk-root'].values.reshape(-1, 1))
 
 #null successfully replace
-# print(df.isnull().sum().sum())
+print(df.isnull().sum().sum())
 
 #Graph Edible vs Poisonous
-# df['class'].value_counts().plot(kind='bar',title='Edible vs. Poisonous');
-# df['class'].value_counts()
+df['class'].value_counts().plot(kind='bar',title='Edible vs. Poisonous');
+df['class'].value_counts()
 
 
 #convert categorical values to numerical
@@ -242,108 +240,108 @@ bayesian_classifier_classification_report = classification_report(y_test_beforse
 
 
 
-# END BAYESIAN CLASSIFIER
-#
-# #                                      **AFTER SELECTION**
-#
-# # BEGIN DECISION TREE
-# clf = DecisionTreeClassifier(criterion='entropy', max_depth=11, max_features=5,min_samples_leaf=5,random_state=1)
-# clf.fit(x_train_afterselection,y_train_afterselection)
-#
-#
-#
-# depth_hyperparams = range(1, 16)
-# training_acc = []
-# validation_acc = []
-# for d in depth_hyperparams:
-#     model_dt =make_pipeline(
-#     DecisionTreeClassifier(max_depth=d,random_state=42)
-#     )
-#     model_dt.fit(x_train_afterselection, y_train_afterselection)
-#     training_acc.append(model_dt.score(x_train_afterselection,y_train_afterselection))
-#     validation_acc.append(model_dt.score(x_test_afterselection,y_test_afterselection))
-#
-#
-# plt.plot(depth_hyperparams,training_acc,label='training best depth')
-# plt.plot(depth_hyperparams,validation_acc,label='validation best depth')
-#
-# clf.score(x_train_afterselection,y_train_afterselection)
-#
-# print(plot_tree(clf))
-#
-# y_pred_afterselection = clf.predict(x_test_afterselection)
-#
-# print(y_pred_afterselection)
-#
-# #96% Accuracy
-# print(accuracy_score(y_test_afterselection,y_pred_afterselection))
-#
-# #END DECISION TREE
-# # "96% after selection
-#
-#
-#
-# # LogisticRegression After Selection
-#
-# # model_l = make_pipeline(OneHotEncoder(),LogisticRegression(max_iter=1000))
-# #
-# # model_l.fit(x_train,y_train)
-# # model_l.score(x_train,y_train)
-# # model_l.score(x_test,y_test)
-# #
-#
-# # Random Forest Classifier After Selection
-#
-# model_r= RandomForestClassifier()
-# model_r.fit(x_train_afterselection, y_train_afterselection)
-# model_r.predict(x_test_afterselection)
-# model_r.score(x_train_afterselection,y_train_afterselection)
-# model_r.score(x_test_afterselection,y_test_afterselection)
+END BAYESIAN CLASSIFIER
+
+#                                      **AFTER SELECTION**
+
+# BEGIN DECISION TREE
+clf = DecisionTreeClassifier(criterion='entropy', max_depth=11, max_features=5,min_samples_leaf=5,random_state=1)
+clf.fit(x_train_afterselection,y_train_afterselection)
+
+
+
+depth_hyperparams = range(1, 16)
+training_acc = []
+validation_acc = []
+for d in depth_hyperparams:
+    model_dt =make_pipeline(
+    DecisionTreeClassifier(max_depth=d,random_state=42)
+    )
+    model_dt.fit(x_train_afterselection, y_train_afterselection)
+    training_acc.append(model_dt.score(x_train_afterselection,y_train_afterselection))
+    validation_acc.append(model_dt.score(x_test_afterselection,y_test_afterselection))
+
+
+plt.plot(depth_hyperparams,training_acc,label='training best depth')
+plt.plot(depth_hyperparams,validation_acc,label='validation best depth')
+
+clf.score(x_train_afterselection,y_train_afterselection)
+
+print(plot_tree(clf))
+
+y_pred_afterselection = clf.predict(x_test_afterselection)
+
+print(y_pred_afterselection)
+
+#96% Accuracy
+print(accuracy_score(y_test_afterselection,y_pred_afterselection))
+
+#END DECISION TREE
+# "96% after selection
+
+
+
+# LogisticRegression After Selection
+
+model_l = make_pipeline(OneHotEncoder(),LogisticRegression(max_iter=1000))
+
+model_l.fit(x_train,y_train)
+model_l.score(x_train,y_train)
+model_l.score(x_test,y_test)
+
+
+# Random Forest Classifier After Selection
+
+model_r= RandomForestClassifier()
+model_r.fit(x_train_afterselection, y_train_afterselection)
+model_r.predict(x_test_afterselection)
+model_r.score(x_train_afterselection,y_train_afterselection)
+model_r.score(x_test_afterselection,y_test_afterselection)
 
 
 
 
-# # BEGIN KNN
+# BEGIN KNN
 
-# model_k=KNeighborsClassifier()
-# model_k.fit(x_train,y_train)
-# model_k.predict(x_test)
-# model_k.score(x_train,y_train)
-# model_k.score(x_test,y_test)
-#
-#
-# #n_neighbors num of k get by square root rows
-# #p num of options poisonous or not
-# knn = KNeighborsClassifier(n_neighbors = 91,p = 2,metric='euclidean')
-#
-# #train model with the training set and training vector
-# knn.fit(x_train_afterselection,y_train_afterselection)
-#
-# #test model with the testing set
-# y_pred_afterselection = knn.predict(x_test_afterselection)
-#
-#
-# #compare the real output with the predicted one to get accuracy of the model
-# KNN_accuracy = accuracy_score(y_test_afterselection,y_pred_afterselection)
-# KNN_f1score = f1_score(y_test_afterselection,y_pred_afterselection)
-# KNN_confusionmatrix = confusion_matrix(y_test_afterselection,y_pred_afterselection)
-# print(KNN_accuracy)
-# print(KNN_f1score)
-#
-#
-# plt.figure(figsize=(7,5))
-# plt.title('Confusion Matrix for KNN Classifier')
-#
-# sns.heatmap(KNN_confusionmatrix , annot=True,xticklabels=["Edible", "Poisonous"],
-#            yticklabels=["Edible", "Poisonous"])
-# plt.xlabel('Predicted')
-# plt.ylabel('Correct Label')
-#
-# # e because all features used
-# #diagonal is the correctly predicted
-# plt.show()
-#
-# KNN_Report_AfterSelection = classification_report(y_test_beforselection,y_pred_beforselection)
-# print(KNN_Report_AfterSelection)
+model_k=KNeighborsClassifier()
+model_k.fit(x_train,y_train)
+model_k.predict(x_test)
+model_k.score(x_train,y_train)
+model_k.score(x_test,y_test)
 
-# #END KNN
+
+#n_neighbors num of k get by square root rows
+#p num of options poisonous or not
+knn = KNeighborsClassifier(n_neighbors = 91,p = 2,metric='euclidean')
+
+#train model with the training set and training vector
+knn.fit(x_train_afterselection,y_train_afterselection)
+
+#test model with the testing set
+y_pred_afterselection = knn.predict(x_test_afterselection)
+
+
+#compare the real output with the predicted one to get accuracy of the model
+KNN_accuracy = accuracy_score(y_test_afterselection,y_pred_afterselection)
+KNN_f1score = f1_score(y_test_afterselection,y_pred_afterselection)
+KNN_confusionmatrix = confusion_matrix(y_test_afterselection,y_pred_afterselection)
+print(KNN_accuracy)
+print(KNN_f1score)
+
+
+plt.figure(figsize=(7,5))
+plt.title('Confusion Matrix for KNN Classifier')
+
+sns.heatmap(KNN_confusionmatrix , annot=True,xticklabels=["Edible", "Poisonous"],
+           yticklabels=["Edible", "Poisonous"])
+plt.xlabel('Predicted')
+plt.ylabel('Correct Label')
+
+# e because all features used
+#diagonal is the correctly predicted
+plt.show()
+
+KNN_Report_AfterSelection = classification_report(y_test_beforselection,y_pred_beforselection)
+print(KNN_Report_AfterSelection)
+
+#END KNN
